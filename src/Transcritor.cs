@@ -180,7 +180,7 @@ namespace Transcritor
             top.Controls.Add(clearButton);
             top.Controls.Add(hint);
             top.SetFlowBreak(hint, true);
-            top.Controls.Add(NewLabel("Link do YouTube:", scale));
+            top.Controls.Add(NewLabel("Link (YouTube, TikTok, Instagram…):", scale));
             urlBox.Width = (int)(420 * scale);
             urlBox.Margin = new Padding((int)(6 * scale), (int)(6 * scale), 0, 0);
             urlBox.KeyDown += delegate(object s, KeyEventArgs e)
@@ -249,7 +249,7 @@ namespace Transcritor
             progress.Maximum = 1000;
             progressRow.Controls.Add(progress, 0, 0);
             statusLabel.AutoSize = true;
-            statusLabel.Text = "Escolha um ou mais áudios, ou cole um link do YouTube.";
+            statusLabel.Text = "Escolha um ou mais áudios, ou cole um link do YouTube, TikTok ou Instagram.";
             statusLabel.Margin = new Padding(0, (int)(4 * scale), 0, 0);
             progressRow.Controls.Add(statusLabel, 0, 1);
             root.Controls.Add(progressRow, 0, 4);
@@ -474,7 +474,7 @@ namespace Transcritor
             waiter.Start();
         }
 
-        // ---------- download do YouTube ----------
+        // ---------- download (YouTube, TikTok, Instagram e o que mais o yt-dlp aceitar) ----------
 
         void StartDownload()
         {
@@ -488,8 +488,13 @@ namespace Transcritor
                 return;
             }
 
-            string root = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "videos");
-            string template = Path.Combine(root, "%(title)s", "%(title)s.%(ext)s");
+            string appDir = Path.GetDirectoryName(Application.ExecutablePath);
+            string root = Path.Combine(appDir, "videos");
+            // titulo cortado: no TikTok/Instagram o "titulo" e a legenda inteira, com hashtags e emojis
+            string template = Path.Combine(root, "%(extractor_key)s", "%(title).60B [%(id)s]", "%(title).60B.%(ext)s");
+            // Instagram (e video restrito) pede login: cookies.txt exportado do navegador, ao lado do exe
+            string cookies = Path.Combine(appDir, "cookies.txt");
+            string cookieArg = File.Exists(cookies) ? "--cookies " + Quote(cookies) + " " : "";
 
             cancelled = false;
             downloadedPath = null;
@@ -500,7 +505,7 @@ namespace Transcritor
 
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = python;
-            info.Arguments = "-u -m yt_dlp --no-playlist -x --audio-format mp3 --newline --progress --print after_move:filepath -o "
+            info.Arguments = "-u -m yt_dlp --no-playlist -x --audio-format mp3 --newline --progress --print after_move:filepath " + cookieArg + "-o "
                 + Quote(template) + " " + Quote(url);
             info.UseShellExecute = false;
             info.CreateNoWindow = true;
@@ -590,7 +595,8 @@ namespace Transcritor
             lock (stderrTail) tail = string.Join(Environment.NewLine, stderrTail.ToArray());
             SetStatus("Não consegui baixar o vídeo.");
             MessageBox.Show(this, "O download falhou (código " + exitCode + ")." + (tail.Length > 0 ? Environment.NewLine + Environment.NewLine + "Detalhes:" + Environment.NewLine + tail : "")
-                + Environment.NewLine + Environment.NewLine + "Se o vídeo é público, atualizar o yt-dlp costuma resolver: python -m pip install -U yt-dlp",
+                + Environment.NewLine + Environment.NewLine + "Se o vídeo é público, atualizar o yt-dlp costuma resolver: python -m pip install -U yt-dlp"
+                + Environment.NewLine + Environment.NewLine + "Instagram (ou vídeo que pede login): salve um cookies.txt do seu navegador ao lado do Transcritor.exe. Veja o LEIA-ME.",
                 Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 

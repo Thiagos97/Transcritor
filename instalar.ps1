@@ -41,7 +41,7 @@ Passo "Bibliotecas Python (PyTorch, Whisper, yt-dlp)"
 & $py -m pip install --upgrade pip
 if ($temNvidia) { & $py -m pip install torch --index-url https://download.pytorch.org/whl/cu128 }
 else { & $py -m pip install torch --index-url https://download.pytorch.org/whl/cpu }
-& $py -m pip install -U openai-whisper yt-dlp
+& $py -m pip install -U openai-whisper "yt-dlp[default,curl-cffi]"
 
 Passo "Teste da GPU"
 & $py -c "import torch; print('torch', torch.__version__); print('CUDA disponivel:', torch.cuda.is_available()); print('GPU:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else '-')"

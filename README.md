@@ -1,8 +1,8 @@
 ﻿# Transcritor
 
-Transcritor de áudio local (Whisper turbo na GPU) e download de vídeo do YouTube em MP3.
+Transcritor de áudio local (Whisper turbo na GPU) e download de vídeo do YouTube, TikTok e Instagram em MP3 (qualquer site do yt-dlp).
 
-**Para que serve:** transformar em texto uma gravação, uma reunião ou um vídeo do YouTube, no seu PC,
+**Para que serve:** transformar em texto uma gravação, uma reunião ou um vídeo do YouTube/TikTok/Instagram, no seu PC,
 sem enviar o áudio para a internet (só o download do próprio vídeo usa a rede).
 
 **Como funciona:** a janela (`Transcritor.exe`) recebe arquivos de áudio/vídeo ou um link; para links,
@@ -16,7 +16,7 @@ ao lado do áudio. A skill `transcrever-youtube` permite pedir isso ao Claude Co
 
 ## Requisitos
 
-Python com `openai-whisper`, `torch` e `yt-dlp`; ffmpeg no PATH. Dê dois cliques em `INSTALAR.bat` uma vez: ele instala tudo (PyTorch com CUDA se houver placa NVIDIA, senão versão para processador), baixa o modelo turbo e compila o `Transcritor.exe`.
+Python com `openai-whisper`, `torch` e `yt-dlp[default,curl-cffi]` (o `curl-cffi` é necessário para o TikTok); ffmpeg no PATH. Dê dois cliques em `INSTALAR.bat` uma vez: ele instala tudo (PyTorch com CUDA se houver placa NVIDIA, senão versão para processador), baixa o modelo turbo e compila o `Transcritor.exe`.
 
 ## Uso
 
@@ -24,7 +24,9 @@ Python com `openai-whisper`, `torch` e `yt-dlp`; ffmpeg no PATH. Dê dois clique
 python youtube.py "URL" [URL2 ...] [--idioma pt] [--pasta nome]
 ```
 
-Saída em `videos/<pasta>/` com o `.mp3` e o `.txt` lado a lado. Para usar a skill, copie
+Para Instagram (e vídeos que pedem login), salve um `cookies.txt` do navegador na pasta do programa; ele é usado automaticamente e nunca vai para o git.
+
+Saída em `videos/<site>/<título>/` (ou `videos/<pasta>/` com `--pasta`) com o `.mp3` e o `.txt` lado a lado. Para usar a skill, copie
 `skills/transcrever-youtube` para `~/.claude/skills/`.
 
 

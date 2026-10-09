@@ -1,6 +1,6 @@
 # Transcritor
 
-Transforma áudio em texto no seu PC, com o Whisper (modelo "turbo") rodando na placa de vídeo. Aceita arquivos de áudio ou vídeo e links do YouTube. Nada é enviado para a internet, a não ser o download do próprio vídeo.
+Transforma áudio em texto no seu PC, com o Whisper (modelo "turbo") rodando na placa de vídeo. Aceita arquivos de áudio ou vídeo e links do YouTube, TikTok, Instagram (e outros sites que o yt-dlp aceita). Nada é enviado para a internet, a não ser o download do próprio vídeo.
 
 ## Como abrir
 
@@ -14,10 +14,12 @@ Atalho **Transcritor** na pasta **IA** da área de trabalho (ou `Transcritor.exe
 3. Clique em **Transcrever**. A barra mostra o progresso, e o texto aparece embaixo.
 4. O `.txt` é salvo **ao lado de cada áudio**, com o mesmo nome.
 
-**Vídeo do YouTube:**
+**Vídeo do YouTube, TikTok ou Instagram:**
 1. Cole o link na caixa do topo.
 2. Aperte **Enter** ou clique em **Baixar e transcrever**.
-3. O áudio (MP3) e o texto vão para `videos\<título do vídeo>\`, nesta pasta.
+3. O áudio (MP3) e o texto vão para `videos\<site>\<título do vídeo>\`, nesta pasta (ex.: `videos\TikTok\...`).
+
+**Instagram (e vídeos que pedem login):** o Instagram quase sempre exige estar logado. Exporte os cookies do seu navegador com a extensão **Get cookies.txt LOCALLY** (Chrome/Edge/Firefox), estando logado no Instagram, e salve como `cookies.txt` nesta pasta, ao lado do `Transcritor.exe`. O arquivo é o seu login: não compartilhe e não suba para o GitHub (o `.gitignore` já o ignora). Se parar de funcionar, exporte de novo.
 
 **Depois de transcrever:**
 - **Copiar texto:** copia a transcrição.

@@ -1,9 +1,9 @@
 ---
 name: transcrever-youtube
-description: Baixar o áudio (MP3) de vídeo do YouTube e transcrever com o Whisper local deste PC (Transcritor em C:\Users\Usuario\Documents\Transcritor, GPU). Usar quando o usuário mandar link do YouTube pedindo transcrição, resumo, "o que ele fala", passo a passo ou anotações do vídeo, inclusive de longe pelo celular.
+description: Baixar o áudio (MP3) de vídeo do YouTube, TikTok ou Instagram e transcrever com o Whisper local deste PC (Transcritor em C:\Users\Usuario\Documents\Transcritor). Usar quando o usuário mandar link do YouTube, TikTok ou Instagram pedindo transcrição, resumo, "o que ele fala", passo a passo ou anotações do vídeo, inclusive de longe pelo celular.
 ---
 
-# YouTube → MP3 → transcrição no PC
+# YouTube / TikTok / Instagram → MP3 → transcrição no PC
 
 Roda tudo local: yt-dlp baixa só o áudio, e o `worker.py` do Transcritor
 (o mesmo do `C:\Users\Usuario\Documents\Transcritor\Transcritor.exe`) transcreve com o Whisper turbo.
@@ -45,6 +45,10 @@ Tempo: com o turbo na GPU, a transcrição leva bem menos que a duração do ví
 (vídeo de 20 min fica pronto em 1 a 2 min). O download depende da internet.
 
 ## Problemas comuns
+
+- **Instagram pedindo login** ("login required", "cookies"): precisa de um `cookies.txt`
+  exportado do navegador (extensão Get cookies.txt LOCALLY) na pasta do Transcritor.
+  Peça para o usuário exportar; nunca peça a senha dele.
 
 - **"yt-dlp falhou"** (HTTP 403, "Sign in to confirm", "Requested format is not
   available"): o YouTube muda com frequência. Atualize e tente de novo uma vez:

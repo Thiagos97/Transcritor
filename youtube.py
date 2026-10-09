@@ -1,4 +1,7 @@
-"""Baixa o audio (MP3) de um video do YouTube e transcreve com o Whisper local.
+"""Baixa o audio (MP3) de um video (YouTube, TikTok, Instagram...) e transcreve com o Whisper local.
+
+Aceita qualquer site suportado pelo yt-dlp. Para Instagram ou video que pede login,
+coloque um cookies.txt (exportado do navegador) ao lado deste arquivo.
 
 Usa o mesmo worker.py do Transcritor.exe (src\\worker.py), na GPU.
 Feito para ser chamado pelo Claude (skill "transcrever-youtube").
@@ -23,6 +26,14 @@ import time
 AQUI = os.path.dirname(os.path.abspath(__file__))
 WORKER = os.path.join(AQUI, "src", "worker.py")
 PASTA_VIDEOS = os.path.join(AQUI, "videos")
+COOKIES = os.path.join(AQUI, "cookies.txt")
+
+
+def ytdlp(*args):
+    base = [sys.executable, "-m", "yt_dlp", "--no-playlist"]
+    if os.path.exists(COOKIES):
+        base += ["--cookies", COOKIES]
+    return base + list(args)
 
 
 def log(msg):
@@ -38,19 +49,23 @@ def nome_pasta(titulo):
 def baixar(url, pasta_nome):
     """Baixa so o audio em MP3. Devolve (titulo, caminho_mp3)."""
     info = json.loads(subprocess.run(
-        [sys.executable, "-m", "yt_dlp", "--no-playlist", "-J", url],
+        ytdlp("-J", url),
         capture_output=True, text=True, encoding="utf-8", check=True).stdout)
     titulo = info.get("title") or info.get("id") or "video"
-    destino = os.path.join(PASTA_VIDEOS, pasta_nome or nome_pasta(titulo))
+    site = info.get("extractor_key") or "outros"
+    destino = os.path.join(PASTA_VIDEOS, pasta_nome or os.path.join(site, nome_pasta(titulo)))
     os.makedirs(destino, exist_ok=True)
     log(f"baixando: {titulo}")
     r = subprocess.run(
-        [sys.executable, "-m", "yt_dlp", "--no-playlist", "-x", "--audio-format", "mp3",
-         "-o", os.path.join(destino, "%(title)s.%(ext)s"),
-         "--print", "after_move:filepath", url],
+        ytdlp("-x", "--audio-format", "mp3",
+         "-o", os.path.join(destino, "%(title).60B [%(id)s].%(ext)s"),
+         "--print", "after_move:filepath", url),
         capture_output=True, text=True, encoding="utf-8")
     if r.returncode != 0:
-        raise RuntimeError("yt-dlp falhou: " + (r.stderr.strip().splitlines() or ["?"])[-1])
+        erro = (r.stderr.strip().splitlines() or ["?"])[-1]
+        if "login" in erro.lower() or "cookies" in erro.lower():
+            erro += " (precisa de login: coloque um cookies.txt ao lado do youtube.py)"
+        raise RuntimeError("yt-dlp falhou: " + erro)
     mp3 = r.stdout.strip().splitlines()[-1]
     return titulo, mp3
 
@@ -89,7 +104,7 @@ def transcrever(mp3s, modelo, idioma):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="YouTube -> MP3 -> transcricao (Whisper local)")
+    ap = argparse.ArgumentParser(description="YouTube/TikTok/Instagram -> MP3 -> transcricao (Whisper local)")
     ap.add_argument("urls", nargs="+")
     ap.add_argument("--modelo", default="turbo",
                     help="modelo do Whisper (so o turbo esta em uso)")
