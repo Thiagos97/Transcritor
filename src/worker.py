@@ -127,7 +127,17 @@ def main():
         out("STATUS", "Baixando o modelo %s (só na primeira vez, pode levar alguns minutos)…" % args.model)
     else:
         out("STATUS", "Carregando o modelo %s…" % args.model)
-    model = whisper.load_model(args.model, device=device)
+    try:
+        model = whisper.load_model(args.model, device=device)
+    except RuntimeError as e:
+        if device != "cuda":
+            raise
+        # placas com pouca memoria (ex.: GTX 1050 Ti, 4 GB): volta para o processador
+        out("STATUS", "Pouca memória na placa (%s); usando o processador." % str(e).splitlines()[0][:80])
+        torch.cuda.empty_cache()
+        device = "cpu"
+        out("DEVICE", "CPU (a placa não coube o modelo)")
+        model = whisper.load_model(args.model, device=device)
 
     language = None if args.language == "auto" else args.language
     prompt = PROMPTS.get(language)
@@ -140,17 +150,29 @@ def main():
             duration = len(audio) / whisper.audio.SAMPLE_RATE
             out("FILE", index, total, path, "%.2f" % duration)
 
-            sys.stdout = SegmentTap()
+            def rodar():
+                sys.stdout = SegmentTap()
+                try:
+                    return model.transcribe(
+                        audio,
+                        language=language,
+                        fp16=(device == "cuda"),
+                        verbose=True,
+                        initial_prompt=prompt,
+                    )
+                finally:
+                    sys.stdout = REAL_STDOUT
+
             try:
-                result = model.transcribe(
-                    audio,
-                    language=language,
-                    fp16=(device == "cuda"),
-                    verbose=True,
-                    initial_prompt=prompt,
-                )
-            finally:
-                sys.stdout = REAL_STDOUT
+                result = rodar()
+            except torch.cuda.OutOfMemoryError:
+                out("STATUS", "Faltou memória na placa; continuando no processador.")
+                del model
+                torch.cuda.empty_cache()
+                device = "cpu"
+                out("DEVICE", "CPU (a placa ficou sem memória)")
+                model = whisper.load_model(args.model, device=device)
+                result = rodar()
 
             txt_path = os.path.splitext(path)[0] + ".txt"
             with open(txt_path, "w", encoding="utf-8") as f:
