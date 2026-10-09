@@ -35,14 +35,14 @@ Atalho **Transcritor** na pasta **IA** da área de trabalho (ou `Transcritor.exe
 
 A janela (`Transcritor.exe`, feita em C#) chama um programa em Python embutido nela (`src\worker.py`), que usa o Whisper com a placa de vídeo. O tempo de transcrição fica bem abaixo da duração do áudio: um vídeo de 35 minutos fica pronto em cerca de 2 minutos.
 
-Precisa estar instalado no PC: o Python em `C:\Python314` com o Whisper e o PyTorch, e o `ffmpeg` (instalado pelo winget).
+Para instalar tudo, dê dois cliques em `INSTALAR.bat` (uma vez só). O log fica em `instalacao.log`.
 
 ## Pela linha de comando ou pelo Claude
 
 `youtube.py` faz o mesmo sem janela, e é o que a skill **transcrever-youtube** do Claude usa (inclusive pedindo pelo celular):
 
 ```bash
-python "E:\Programas desenvolvidos\Transcritor\youtube.py" "https://www.youtube.com/watch?v=..." --idioma pt
+python "C:\Users\Usuario\Documents\Transcritor\youtube.py" "https://www.youtube.com/watch?v=..." --idioma pt
 ```
 
 `--pasta nome` junta vários vídeos de um assunto na mesma pasta.

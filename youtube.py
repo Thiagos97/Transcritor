@@ -6,7 +6,7 @@ Feito para ser chamado pelo Claude (skill "transcrever-youtube").
 Uso:
   python youtube.py URL [URL ...] [--modelo turbo] [--idioma auto] [--pasta nome]
 
-Cada video vai para E:\\Programas desenvolvidos\\Transcritor\\videos\\<pasta>\\ com o .mp3 e o .txt ao lado.
+Cada video vai para C:\\Users\\Usuario\\Documents\\Transcritor\\videos\\<pasta>\\ com o .mp3 e o .txt ao lado.
 Progresso em stderr; na ultima linha de stdout, um JSON:
   {"ok": true, "itens": [{"url": ..., "titulo": ..., "mp3": ..., "txt": ...}], "segundos": ...}
 """

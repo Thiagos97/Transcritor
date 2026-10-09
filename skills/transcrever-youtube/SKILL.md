@@ -1,12 +1,12 @@
 ---
 name: transcrever-youtube
-description: Baixar o áudio (MP3) de vídeo do YouTube e transcrever com o Whisper local deste PC (Transcritor em E:\Programas desenvolvidos\Transcritor, GPU). Usar quando o usuário mandar link do YouTube pedindo transcrição, resumo, "o que ele fala", passo a passo ou anotações do vídeo, inclusive de longe pelo celular.
+description: Baixar o áudio (MP3) de vídeo do YouTube e transcrever com o Whisper local deste PC (Transcritor em C:\Users\Usuario\Documents\Transcritor, GPU). Usar quando o usuário mandar link do YouTube pedindo transcrição, resumo, "o que ele fala", passo a passo ou anotações do vídeo, inclusive de longe pelo celular.
 ---
 
 # YouTube → MP3 → transcrição no PC
 
 Roda tudo local: yt-dlp baixa só o áudio, e o `worker.py` do Transcritor
-(o mesmo do `E:\Programas desenvolvidos\Transcritor\Transcritor.exe`) transcreve com o Whisper turbo na RTX 4070 Ti.
+(o mesmo do `C:\Users\Usuario\Documents\Transcritor\Transcritor.exe`) transcreve com o Whisper turbo.
 O turbo é o único modelo baixado e em uso; não passe `--modelo`.
 
 ## Passo a passo
@@ -15,7 +15,7 @@ O turbo é o único modelo baixado e em uso; não passe `--modelo`.
    rode com `run_in_background` e avise o usuário que está processando):
 
    ```bash
-   PYTHONIOENCODING=utf-8 /c/Python314/python.exe "E:/Programas desenvolvidos/Transcritor/youtube.py" "URL" [URL2 ...] [opções]
+   PYTHONIOENCODING=utf-8 C:/Users/Usuario/AppData/Local/Programs/Python/Python312/python.exe "C:/Users/Usuario/Documents/Transcritor/youtube.py" "URL" [URL2 ...] [opções]
    ```
 
    A última linha do stdout é um JSON:
@@ -30,7 +30,7 @@ O turbo é o único modelo baixado e em uso; não passe `--modelo`.
      quando ajudar.
    - se ele quiser o texto traduzido inteiro, traduza e mande como arquivo.
 
-3. Diga onde ficaram os arquivos (pasta em `E:\Programas desenvolvidos\Transcritor\videos\`).
+3. Diga onde ficaram os arquivos (pasta em `C:\Users\Usuario\Documents\Transcritor\videos\`).
 
 ## Opções
 
@@ -48,7 +48,7 @@ Tempo: com o turbo na GPU, a transcrição leva bem menos que a duração do ví
 
 - **"yt-dlp falhou"** (HTTP 403, "Sign in to confirm", "Requested format is not
   available"): o YouTube muda com frequência. Atualize e tente de novo uma vez:
-  `/c/Python314/python.exe -m pip install -U yt-dlp`. Se o vídeo for privado,
+  `C:/Users/Usuario/AppData/Local/Programs/Python/Python312/python.exe -m pip install -U yt-dlp`. Se o vídeo for privado,
   com restrição de idade ou só para membros, diga ao usuário que não dá sem login.
 - **"ffmpeg não encontrado"**: está instalado via winget em
   `%LOCALAPPDATA%\Microsoft\WinGet\Links`; o worker já procura lá.
@@ -58,7 +58,7 @@ Tempo: com o turbo na GPU, a transcrição leva bem menos que a duração do ví
 
 ## Onde fica cada coisa
 
-- Script: `E:\Programas desenvolvidos\Transcritor\youtube.py`
-- Transcritor (janela e worker): `E:\Programas desenvolvidos\Transcritor\Transcritor.exe`, `E:\Programas desenvolvidos\Transcritor\src\worker.py`
-- Saída: `E:\Programas desenvolvidos\Transcritor\videos\<pasta>\<título>.mp3` e `.txt` ao lado
+- Script: `C:\Users\Usuario\Documents\Transcritor\youtube.py`
+- Transcritor (janela e worker): `C:\Users\Usuario\Documents\Transcritor\Transcritor.exe`, `C:\Users\Usuario\Documents\Transcritor\src\worker.py`
+- Saída: `C:\Users\Usuario\Documents\Transcritor\videos\<pasta>\<título>.mp3` e `.txt` ao lado
 - Modelos do Whisper: `%USERPROFILE%\.cache\whisper`

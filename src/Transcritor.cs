@@ -769,6 +769,7 @@ namespace Transcritor
             string[] fallbacks = {
                 @"C:\Python314\python.exe",
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Python\Python314\python.exe"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Python\Python312\python.exe"),
             };
             foreach (string candidate in fallbacks)
                 if (File.Exists(candidate)) return candidate;

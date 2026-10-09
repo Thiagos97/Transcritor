@@ -16,8 +16,7 @@ ao lado do áudio. A skill `transcrever-youtube` permite pedir isso ao Claude Co
 
 ## Requisitos
 
-Python com `openai-whisper`, `torch` (CUDA) e `yt-dlp`; ffmpeg no PATH. Os caminhos assumem
-`E:\Transcritor` e `C:\Python314\python.exe`; ajuste se mudar de lugar.
+Python com `openai-whisper`, `torch` e `yt-dlp`; ffmpeg no PATH. Dê dois cliques em `INSTALAR.bat` uma vez: ele instala tudo (PyTorch com CUDA se houver placa NVIDIA, senão versão para processador), baixa o modelo turbo e compila o `Transcritor.exe`.
 
 ## Uso
 
