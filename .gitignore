@@ -1,4 +1,5 @@
 ﻿videos/
 __pycache__/
 *.mp3
-
+# login do navegador: nunca versionar
+cookies.txt
